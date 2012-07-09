@@ -36,9 +36,20 @@ function git_prompt_long_sha() {
   SHA=$(git rev-parse HEAD 2> /dev/null) && echo "$ZSH_THEME_GIT_PROMPT_SHA_BEFORE$SHA$ZSH_THEME_GIT_PROMPT_SHA_AFTER"
 }
 
+function git_fetch_remote() {
+    TS_NOW="$(date +%s)"
+    TS_OLD=0
+    TS_OLD="$(date -r .git/last_fetch.zsh +%s 2> /dev/null)"
+    DIFF=$((TS_NOW - TS_OLD))
+    if [ "$DIFF" -gt 5 ]; then
+        touch ".git/last_fetch.zsh" 1>&2 2> /dev/null
+        git fetch 1>&2 2> /dev/null
+    fi
+}
+
 # Get the status of the working tree
 git_prompt_status() {
-  IGN=$(git fetch 2> /dev/null)
+  $(git_fetch_remote)
   INDEX=$(git status --porcelain 2> /dev/null)
   INDEXEXTENDED=$(git status 2> /dev/null)
   STATUS=""
