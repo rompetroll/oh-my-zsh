@@ -41,7 +41,7 @@ function git_fetch_remote() {
     TS_OLD=0
     TS_OLD="$(date -r .git/last_fetch.zsh +%s 2> /dev/null)"
     DIFF=$((TS_NOW - TS_OLD))
-    if [ "$DIFF" -gt 15 ]; then
+    if [ "$DIFF" -gt 10080 ]; then
         touch ".git/last_fetch.zsh" 1>&2 2> /dev/null
         git fetch 1>&2 2> /dev/null
     fi
