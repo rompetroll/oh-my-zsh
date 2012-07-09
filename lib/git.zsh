@@ -38,7 +38,9 @@ function git_prompt_long_sha() {
 
 # Get the status of the working tree
 git_prompt_status() {
+  IGN=$(git fetch 2> /dev/null)
   INDEX=$(git status --porcelain 2> /dev/null)
+  INDEXEXTENDED=$(git status 2> /dev/null)
   STATUS=""
   if $(echo "$INDEX" | grep '^?? ' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_UNTRACKED$STATUS"
@@ -65,6 +67,12 @@ git_prompt_status() {
   fi
   if $(echo "$INDEX" | grep '^UU ' &> /dev/null); then
     STATUS="$ZSH_THEME_GIT_PROMPT_UNMERGED$STATUS"
+  fi
+  if $(echo "$INDEXEXTENDED" | grep 'Your branch is ahead' &> /dev/null); then
+      STATUS="$ZSH_THEME_GIT_PROMPT_UNPUSHED$STATUS"
+  fi
+  if $(echo "$INDEXEXTENDED" | grep 'Your branch is behind' &> /dev/null); then
+      STATUS="$ZSH_THEME_GIT_PROMPT_UNFETCHED$STATUS"
   fi
   echo $STATUS
 }
