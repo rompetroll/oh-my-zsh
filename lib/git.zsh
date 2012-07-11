@@ -39,10 +39,12 @@ function git_prompt_long_sha() {
 function git_fetch_remote() {
     TS_NOW="$(date +%s)"
     TS_OLD=0
-    TS_OLD="$(date -r .git/last_fetch.zsh +%s 2> /dev/null)"
+    ROOTPATH="$(git rev-parse --show-toplevel 2> /dev/null)"
+    touchfile="$ROOTPATH"/.git/last_fetch.zsh
+    TS_OLD="$(date -r $touchfile +%s 2> /dev/null)"
     DIFF=$((TS_NOW - TS_OLD))
     if [ "$DIFF" -gt 10080 ]; then
-        touch ".git/last_fetch.zsh" 1>&2 2> /dev/null
+        touch $touchfile 1>&2 2> /dev/null
         git fetch 1>&2 2> /dev/null
     fi
 }
