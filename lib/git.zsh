@@ -87,6 +87,9 @@ git_prompt_status() {
   if $(echo "$INDEXEXTENDED" | grep 'Your branch is behind' &> /dev/null); then
       STATUS="$ZSH_THEME_GIT_PROMPT_UNFETCHED$STATUS"
   fi
+  if $(echo "$INDEXEXTENDED" | grep 'have diverged' &> /dev/null); then
+      STATUS="$ZSH_THEME_GIT_PROMPT_DIVERGED$STATUS"
+  fi
   echo $STATUS
 }
 
